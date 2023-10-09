@@ -1,0 +1,41 @@
+[song,fs]=wavread('1.wav');
+
+len=size(song)
+song=(song(1:len));
+[S,F,T]=spectrogram(song,1024,.75*1024,[],fs,'yaxis');
+
+g=abs(max(max(S)))
+[m,n]=size(S)
+
+
+
+
+k=1
+
+
+for i=1:n
+    for j=1:m-1
+        if ((abs(S(j,i)))>.60*g)
+            if((k>2) && (T(1,i)-s2(k-1,2))<.04 && (((abs(S(j,i))>=s2(k-1,4))) ))
+                s2(k-1,4)=abs(S(j,i));
+                s2(k-1,1)=F(j,1);
+            elseif((k>2) && (T(1,i)-s2(k-1,2))<.04 && (((abs(S(j,i))<s2(k-1,4))) ))
+            else
+                s2(k,1)=F(j,1);
+                s2(k,2)=T(1,i);
+                s2(k,3)=1;
+                s2(k,4)=abs(S(j,i));
+                if (k>1)
+                    s2(k,5)=s2(k,2)-s2(k-1,2);
+                else
+                    s2(k,5)=0;
+                end
+                k=k+1;
+            end
+        end
+    end
+end
+
+
+csvwrite('m.csv',s2);
+
